@@ -1,16 +1,25 @@
-# React + Vite
+# Role-Based Navigation System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A dynamic sidebar and routing system where visibility and access are entirely controlled by a permissions API response — nothing is hardcoded.
 
-Currently, two official plugins are available:
+## Problem Statement
+Create a dynamic sidebar controlled by permissions, where:
+- The sidebar generates itself dynamically from an API response
+- Unauthorized modules are hidden
+- Routes are protected at the router level, not just hidden in the UI
+- Buttons/actions are gated by specific permissions (e.g. VIEW vs CREATE)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Approach
 
-## React Compiler
+- **Single source of truth**: `routes/routeConfig.js` defines every page (path, required module, required permission). The Sidebar, route guards, and buttons all read from this same config plus the logged-in user's live permissions — no duplicated access-control logic anywhere in the app.
+- **Auth flow**: `auth/AuthContext.jsx` simulates fetching a logged-in user's permissions from an API (`api/mockPermissions.js`), mirroring the exact JSON shape given in the assignment brief (`{ modules: [{ name, permission: [] }] }`).
+- **Route protection, not just UI hiding**: `routes/ProtectedRoute.jsx` guards every route at the router level using React Router's `<Route>`. Even if a user manually types a restricted URL (e.g. `/billing` without access), they're redirected to `/unauthorized` — sidebar hiding is a UX nicety, the route guard is the actual security boundary.
+- **Reusable permission check**: `utils/permissions.js` exports one pure function, `hasPermission(modules, moduleName, action)`, used identically by the Sidebar, ProtectedRoute, and permission-gated buttons (e.g. the "Create Order" button, which only appears for users with `CREATE` permission on Orders).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
+- React + Vite
+- React Router (routing + guards)
+- Context API (auth/permission state — no external state library needed at this scope)
+- Tailwind CSS (styling)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Folder Structure
