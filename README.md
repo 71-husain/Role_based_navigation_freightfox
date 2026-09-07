@@ -23,3 +23,32 @@ Create a dynamic sidebar controlled by permissions, where:
 - Tailwind CSS (styling)
 
 ## Folder Structure
+
+src/
+├── api/mockPermissions.js # Simulated API response for two sample users
+├── auth/AuthContext.jsx # Auth state, login/logout, permission data
+├── routes/
+│ ├── routeConfig.js # Single source of truth: path, module, permission
+│ └── ProtectedRoute.jsx # Route guard component
+├── components/Sidebar/Sidebar.jsx
+├── pages/
+│ ├── Orders/Orders.jsx # Includes permission-gated Create button
+│ ├── Billing/Billing.jsx
+│ ├── Login.jsx
+│ └── Unauthorized.jsx
+├── utils/permissions.js # hasPermission() — pure function, reused everywhere
+└── App.jsx
+
+
+## How to Run
+```bash
+npm install
+npm run dev
+```
+
+## Demo
+Two sample users are pre-configured in `api/mockPermissions.js`:
+- **User A** — Orders (VIEW, CREATE) + Billing (VIEW) → sees both sidebar links and the Create Order button
+- **User B** — Orders (VIEW, CREATE) only → Billing link is hidden, and directly visiting `/billing` redirects to `/unauthorized`
+
+Log in as either user from the home screen, use the sidebar to navigate, and use Logout to sign out (redirects to `/unauthorized` if you were on a protected page, with a link back to Login).
