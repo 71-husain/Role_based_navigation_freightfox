@@ -22,22 +22,6 @@ Create a dynamic sidebar controlled by permissions, where:
 - Context API (auth/permission state — no external state library needed at this scope)
 - Tailwind CSS (styling)
 
-## Folder Structure
-
-src/
-├── api/mockPermissions.js # Simulated API response for two sample users
-├── auth/AuthContext.jsx # Auth state, login/logout, permission data
-├── routes/
-│ ├── routeConfig.js # Single source of truth: path, module, permission
-│ └── ProtectedRoute.jsx # Route guard component
-├── components/Sidebar/Sidebar.jsx
-├── pages/
-│ ├── Orders/Orders.jsx # Includes permission-gated Create button
-│ ├── Billing/Billing.jsx
-│ ├── Login.jsx
-│ └── Unauthorized.jsx
-├── utils/permissions.js # hasPermission() — pure function, reused everywhere
-└── App.jsx
 
 
 ## How to Run
